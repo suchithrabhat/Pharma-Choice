@@ -7,6 +7,7 @@ Features
 Admin Dashboard
 
 The administrator has complete control over the pharmacy management system. After logging in, the admin can create medicine categories such as Fever, Stomach Pain, and others. Each category can contain multiple medicines with details including the drug name, price, discount, and available stock.
+
 The admin can:
 Add, update, and delete medicine categories.
 Add, update, and delete medicines.
@@ -14,15 +15,19 @@ View all available medicines.
 View customer orders.
 Update the status of an order from Order Placed (default) to Shipped or Delivered.
 Manage the complete inventory through dedicated dashboard pages.
+
 User Dashboard
 The user dashboard allows customers to browse medicines and place orders.
+
 Users can:
 View available medicines.
 Add medicines to the shopping cart.
 Confirm orders.
 View their order history in the My Orders page.
 Log out securely.
+
 Once a user confirms an order, it automatically becomes visible in the administrator's View Orders page, where the admin can monitor and update the order status.
+
 Modules
 User Authentication
 Admin Dashboard
@@ -33,6 +38,7 @@ Shopping Cart
 Order Management
 Order Status Tracking
 Inventory Management
+
 Technologies Used
 HTML
 CSS
