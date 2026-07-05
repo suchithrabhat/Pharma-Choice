@@ -4,7 +4,7 @@ Overview
 Pharma Choice is a full-stack pharmacy management system developed to simplify the process of managing medicines and customer orders. The application provides two separate dashboards—Admin and User—with role-based access. Administrators can manage medicine categories, maintain drug inventory, and process customer orders, while users can browse medicines, place orders, and track their purchases through an intuitive interface.
 
 Features
-Admin Dashboard
+Admin Dashboard :
 
 The administrator has complete control over the pharmacy management system. After logging in, the admin can create medicine categories such as Fever, Stomach Pain, and others. Each category can contain multiple medicines with details including the drug name, price, discount, and available stock.
 
@@ -16,7 +16,7 @@ View customer orders.
 Update the status of an order from Order Placed (default) to Shipped or Delivered.
 Manage the complete inventory through dedicated dashboard pages.
 
-User Dashboard
+User Dashboard :
 The user dashboard allows customers to browse medicines and place orders.
 
 Users can:
