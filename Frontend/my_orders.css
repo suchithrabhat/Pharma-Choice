@@ -1,0 +1,92 @@
+/* ===== PAGE BACKGROUND ===== */
+body {
+    background: linear-gradient(180deg, #fff7ed 0, #f8fafc 270px, #eef2f7 100%);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 44px 20px 30px;
+    text-align: left;
+    overflow-x: auto;
+}
+
+/* ===== HEADING ===== */
+.container h1 {
+    font-size: 32px;
+    color: #0f172a;
+    margin: 0 0 24px;
+    text-align: left;
+    font-weight: 900;
+}
+
+/* ===== TABLE ===== */
+.container table {
+    width: 100%;
+    min-width: 820px;
+    margin-top: 10px;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 18px 44px rgba(15,23,42,0.13);
+}
+
+/* ===== TABLE HEADER ===== */
+.container th {
+    background: #090e1b;
+    color: #ffffff;
+    padding: 14px;
+    font-size: 14px;
+    text-align: left;
+    font-weight: 900;
+}
+
+/* ===== TABLE DATA ===== */
+.container td {
+    padding: 14px;
+    font-size: 14px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+/* ===== ROW HOVER EFFECT ===== */
+.container tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* ===== REMOVE LAST BORDER ===== */
+.container tr:last-child td {
+    border-bottom: none;
+}
+
+/* ===== STATUS COLUMN ===== */
+.container td:nth-child(7) {
+    font-weight: bold;
+    color: green;
+}
+
+/* ===== EMPTY STATE ===== */
+.container td[colspan="8"] {
+    padding: 25px;
+    font-size: 16px;
+    color: #777;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+    .container {
+        padding: 30px 16px;
+    }
+
+    .container h1 {
+        font-size: 22px;
+    }
+
+    .container th,
+    .container td {
+        padding: 10px;
+    }
+}

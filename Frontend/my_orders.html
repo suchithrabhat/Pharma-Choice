@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders</title>
+
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="my_orders.css">
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Pharma Choice</div>
+    <nav>
+        <a href="view_drug.html">View Drugs</a>
+        <a href="my_orders.html">My Orders</a>
+        <a href="index.html">Logout</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h1>📜 My Orders</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Drug</th>
+                <th>Category</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="orders"></tbody>
+    </table>
+</div>
+
+<script>
+
+// ================= LOAD ORDERS FROM DATABASE =================
+
+async function loadOrders() {
+
+    let tbody = document.getElementById("orders");
+
+    try {
+
+        let userEmail = localStorage.getItem("email");
+
+        let response = await fetch(
+            `http://127.0.0.1:5001/orders/${userEmail}`
+        );
+        let orders = await response.json();
+
+        if (!orders || orders.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='8'>No orders yet</td></tr>";
+            return;
+        }
+
+        tbody.innerHTML = "";
+
+        orders.forEach((o, i) => {
+
+            let qty = Number(o.qty);
+            let price = Number(o.price);
+            let total = Number(o.total);
+
+            tbody.innerHTML += `
+            <tr>
+                <td>${i + 1}</td>
+                <td>${o.drug_name}</td>
+                <td>${o.category}</td>
+                <td>${qty}</td>
+                <td>₹${price.toFixed(2)}</td>
+                <td>₹${total.toFixed(2)}</td>
+                <td>${o.status}</td>
+                <td>${o.order_date}</td>
+            </tr>`;
+        });
+
+    } catch (error) {
+        console.log(error);
+        tbody.innerHTML = "<tr><td colspan='8'>Error loading orders</td></tr>";
+    }
+}
+
+// ================= LOGOUT =================
+
+function logout() {
+    localStorage.removeItem("role");
+}
+
+// ================= PAGE LOAD =================
+
+window.onload = function() {
+    loadOrders();
+};
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,184 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Body */
+body {
+    background:
+        linear-gradient(135deg, rgba(9,14,27,0.96), rgba(15,118,110,0.78)),
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 18px),
+        #0f172a;
+    color: white;
+    min-height: 100vh;
+}
+
+/* Navbar */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 18px clamp(18px, 4vw, 46px);
+    background: rgba(9, 14, 27, 0.9);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.22);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+nav {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px 24px;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: #dbeafe;
+    text-decoration: none;
+    font-weight: 700;
+    padding: 8px 12px;
+    border-radius: 999px;
+}
+
+nav a:hover {
+    background: rgba(255,255,255,0.1);
+    text-decoration: none;
+}
+
+/* Active Link */
+nav a.active {
+    border-bottom: none;
+    background: #f59e0b;
+    color: #111827;
+    box-shadow: 0 8px 18px rgba(245, 158, 11, 0.3);
+}
+
+/* Hero Section */
+.hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 76px);
+    padding: 70px 20px;
+    text-align: left;
+}
+
+.content {
+    width: min(100%, 900px);
+    border-left: 8px solid #f59e0b;
+    padding: 28px 0 28px 34px;
+}
+
+.content h1 {
+    font-size: clamp(42px, 7vw, 82px);
+    margin-bottom: 18px;
+    line-height: 1.05;
+    font-weight: 900;
+    max-width: 760px;
+}
+
+.content p {
+    margin-bottom: 20px;
+    color: #dbeafe;
+    font-size: 21px;
+    line-height: 1.6;
+    max-width: 640px;
+}
+
+.content button {
+    padding: 15px 26px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    color: white;
+    cursor: pointer;
+    font-weight: 900;
+    font-size: 15px;
+    box-shadow: 0 16px 34px rgba(239, 68, 68, 0.3);
+}
+
+.content button:hover {
+    transform: translateY(-2px);
+}
+
+/* Login Page */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.login-box {
+    background: rgba(255,255,255,0.1);
+    padding: 30px;
+    border-radius: 10px;
+    width: 320px;
+}
+
+.login-box h2 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+input, select {
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: none;
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #38bdf8;
+    color: white;
+    cursor: pointer;
+}
+
+@media (max-width: 700px) {
+    header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    nav {
+        justify-content: flex-start;
+    }
+
+    .hero {
+        align-items: flex-start;
+        min-height: auto;
+    }
+
+    .content {
+        border-left-width: 5px;
+        padding-left: 20px;
+    }
+}

@@ -1,0 +1,125 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Body */
+body {
+    background:
+        linear-gradient(180deg, #fff7ed 0, #f8fafc 270px, #eef2f7 100%);
+    color: #111827;
+    min-height: 100vh;
+}
+
+/* Navbar */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    background: #090e1b;
+    padding: 16px clamp(18px, 4vw, 40px);
+    color: white;
+    box-shadow: 0 14px 34px rgba(15,23,42,0.22);
+    border-bottom: 4px solid #f59e0b;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+nav {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px 18px;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-weight: 800;
+    color: #e2e8f0;
+}
+
+nav a.active {
+    border-bottom: none;
+    background: #f59e0b;
+    color: #111827;
+}
+
+/* Dashboard */
+.dashboard {
+    width: min(100%, 1300px);
+    padding: 44px clamp(16px, 4vw, 34px);
+    margin: 0 auto;
+    text-align: left;
+}
+
+.dashboard h1 {
+    margin-bottom: 28px;
+    font-size: 38px;
+    font-weight: 900;
+    color: #0f172a;
+}
+
+/* Cards */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+/* Card Style */
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    border-top: 6px solid #0f766e;
+    box-shadow: 0 18px 44px rgba(15,23,42,0.13);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h3 {
+    margin-bottom: 10px;
+    color: #475569;
+    font-weight: 900;
+}
+
+.card p {
+    font-size: 34px;
+    font-weight: bold;
+    color: #0f172a;
+}
+
+/* Alert Card */
+.alert {
+    border-left: 5px solid red;
+}
+
+@media (max-width: 760px) {
+    header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    nav {
+        justify-content: flex-start;
+    }
+}

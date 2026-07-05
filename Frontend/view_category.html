@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        View Categories
+    </title>
+
+    <link rel="stylesheet"
+    href="category.css">
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        Pharma Choice
+    </div>
+
+    <nav>
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="add_category.html">
+            Add Category
+        </a>
+
+        <a href="view_category.html"
+        class="active">
+
+            View Category
+
+        </a>
+
+        <a href="add_drug.html">
+            Add Drug
+        </a>
+
+        <a href="view_drug.html">
+            View Drugs
+        </a>
+
+        <a href="view_orders.html">
+            View Orders
+        </a>
+
+        <a href="index.html">
+            Logout
+        </a>
+
+    </nav>
+
+</header>
+
+<div class="container">
+
+    <div class="box">
+
+        <h2>
+            Available Categories
+        </h2>
+
+        <ul id="categoryList"></ul>
+
+    </div>
+
+</div>
+
+<script>
+
+async function loadCategories() {
+
+    try{
+
+        let response = await fetch(
+            "http://127.0.0.1:5001/categories"
+        );
+
+        let categories = await response.json();
+
+        let list =
+        document.getElementById("categoryList");
+
+        list.innerHTML = "";
+
+        if(categories.length === 0){
+
+            list.innerHTML =
+            "<li>No Categories Found</li>";
+
+            return;
+        }
+
+        categories.forEach(cat => {
+
+            let li =
+            document.createElement("li");
+
+            li.innerHTML = `
+
+                ${cat.category_name}
+
+                <button onclick="deleteCategory(${cat.id})">
+
+                    Delete
+
+                </button>
+            `;
+
+            list.appendChild(li);
+        });
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        alert("Failed To Load Categories");
+    }
+}
+
+async function deleteCategory(id){
+
+    let confirmDelete =
+    confirm("Are you sure you want to delete this category?");
+
+    if(!confirmDelete){
+
+        return;
+    }
+
+    try{
+
+        let response = await fetch(
+            `http://127.0.0.1:5001/delete_category/${id}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        let data = await response.json();
+
+        alert(data.message);
+
+        loadCategories();
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        alert("Failed To Delete Category");
+    }
+}
+
+window.onload = loadCategories;
+
+</script>
+
+</body>
+
+</html>

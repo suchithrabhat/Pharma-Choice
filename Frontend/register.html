@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register - Pharma Choice</title>
+
+    <link rel="stylesheet" href="register.css">
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<header>
+
+    <div class="logo">
+        Pharma Choice
+    </div>
+
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="login.html">
+            Login
+        </a>
+
+        <a href="register.html" class="active">
+            Register
+        </a>
+
+    </nav>
+
+</header>
+
+<!-- REGISTER FORM -->
+
+<div class="container">
+
+    <div class="register-box">
+
+        <h2>
+            User Registration
+        </h2>
+
+        <form id="registerForm">
+
+            <label>Name</label>
+
+            <input 
+            type="text"
+            id="name"
+            required>
+
+            <label>Email</label>
+
+            <input 
+            type="email"
+            id="email"
+            required>
+
+            <label>Phone</label>
+
+            <input 
+            type="tel"
+            id="phone"
+            required>
+
+            <label>Gender</label>
+
+            <select 
+            id="gender"
+            required>
+
+                <option value="">
+                    Select
+                </option>
+
+                <option value="Male">
+                    Male
+                </option>
+
+                <option value="Female">
+                    Female
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+            <label>Age</label>
+
+            <input 
+            type="number"
+            id="age"
+            required>
+
+            <label>Pincode</label>
+
+            <input 
+            type="text"
+            id="pincode"
+            required>
+
+            <label>Password</label>
+
+            <input 
+            type="password"
+            id="password"
+            required>
+
+            <label>Address</label>
+
+            <textarea 
+            rows="3"
+            id="address"
+            required></textarea>
+
+            <button type="submit">
+                Register
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- JAVASCRIPT -->
+
+<script>
+
+document.getElementById("registerForm").addEventListener(
+    "submit",
+    async function(event){
+
+    event.preventDefault();
+
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let phone = document.getElementById("phone").value;
+    let gender = document.getElementById("gender").value;
+    let age = document.getElementById("age").value;
+    let pincode = document.getElementById("pincode").value;
+    let password = document.getElementById("password").value;
+    let address = document.getElementById("address").value;
+
+    /* ---------------- VALIDATION ---------------- */
+
+    // Email validation
+    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!emailPattern.test(email)){
+        alert("Please enter a valid email address");
+        return;
+    }
+
+    // Phone validation (10 digits)
+    let phonePattern = /^[6-9]\d{9}$/;
+    if(!phonePattern.test(phone)){
+        alert("Please enter a valid 10-digit phone number");
+        return;
+    }
+
+    // Pincode validation (6 digits)
+    let pinPattern = /^[0-9]{6}$/;
+    if(!pinPattern.test(pincode)){
+        alert("Please enter a valid 6-digit pincode");
+        return;
+    }
+
+    /* ---------------- USER OBJECT ---------------- */
+
+    let user = {
+        name,
+        email,
+        phone,
+        gender,
+        age,
+        pincode,
+        password,
+        address
+    };
+
+    console.log("Sending Data:", user);
+
+    try{
+
+        let response = await fetch(
+            "http://127.0.0.1:5001/register",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(user)
+            }
+        );
+
+        console.log("Response Status:", response.status);
+
+        let textData = await response.text();
+
+        console.log("Raw Response:", textData);
+
+        let data = JSON.parse(textData);
+
+        if(response.ok){
+            alert(data.message);
+            window.location.href = "login.html";
+        }
+        else{
+            alert("Registration Failed");
+        }
+
+    }
+    catch(error){
+        console.log("FETCH ERROR:", error);
+        alert("Registration Failed");
+    }
+
+});
+
+</script>
+
+</body>
+
+</html>

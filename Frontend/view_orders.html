@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>View Orders</title>
+
+    <link rel="stylesheet" href="dashboard.css">
+
+    <style>
+        body{
+            background:linear-gradient(180deg, #fff7ed 0, #f8fafc 270px, #eef2f7 100%);
+            color:#111827;
+            font-family:'Segoe UI', Arial, sans-serif;
+        }
+
+        .container{
+            width:min(100%,1300px);
+            margin:0 auto;
+            padding:44px clamp(16px,4vw,34px);
+        }
+
+        .top-section{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            gap:16px;
+            margin-bottom:25px;
+            flex-wrap:wrap;
+        }
+
+        .top-section h1{
+            font-size:36px;
+            color:#1e293b;
+            margin:0;
+            font-weight:900;
+        }
+
+        .order-count{
+            background:white;
+            padding:12px 18px;
+            border-radius:8px;
+            font-weight:bold;
+            box-shadow:0 14px 30px rgba(15,23,42,0.12);
+            border-left:6px solid #f59e0b;
+            color:#334155;
+        }
+
+        .table-container{
+            background:white;
+            border-radius:8px;
+            overflow-x:auto;
+            box-shadow:0 18px 44px rgba(15,23,42,0.13);
+        }
+
+        table{
+            width:100%;
+            min-width:1120px;
+            border-collapse:collapse;
+        }
+
+        thead{
+            background:#090e1b;
+        }
+
+        thead th{
+            color:white;
+            padding:16px;
+            text-align:left;
+            font-size:14px;
+        }
+
+        tbody tr{
+            border-bottom:1px solid #e2e8f0;
+            transition:0.3s;
+        }
+
+        tbody tr:hover{
+            background:#f8fafc;
+        }
+
+        tbody td{
+            padding:18px 16px;
+            font-size:14px;
+            color:#334155;
+            vertical-align:middle;
+        }
+
+        .user-box{ line-height:1.6; }
+
+        .user-name{ font-weight:bold; color:#0f172a; }
+
+        .user-email,.user-phone,.user-address{
+            color:#64748b;
+            font-size:14px;
+        }
+
+        .price{ font-weight:bold; color:#0f172a; }
+
+        .status{
+            padding:8px 16px;
+            border-radius:999px;
+            font-size:13px;
+            font-weight:bold;
+            display:inline-block;
+            min-width:120px;
+            text-align:center;
+        }
+
+        .placed{ background:#dcfce7; color:#166534; }
+        .shipped{ background:#fef3c7; color:#92400e; }
+        .delivered{ background:#dbeafe; color:#1d4ed8; }
+
+        .action-box{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        select{
+            padding:10px;
+            border-radius:8px;
+            border:1px solid #cbd5e1;
+        }
+
+        .save-btn{
+            background:linear-gradient(135deg,#0f766e,#16a34a);
+            color:white;
+            border:none;
+            padding:10px 18px;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:600;
+            box-shadow:0 10px 20px rgba(15,118,110,0.2);
+        }
+
+        .delete-btn{
+            background:#ef4444;
+            color:white;
+            border:none;
+            padding:10px 18px;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:600;
+        }
+
+        .empty{
+            text-align:center;
+            padding:50px;
+            font-size:18px;
+            color:#64748b;
+        }
+
+        @media(max-width:768px){
+            .container{
+                padding:30px 16px;
+            }
+
+            .top-section h1{
+                font-size:28px;
+            }
+
+            .order-count{
+                width:100%;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">Pharma Choice</div>
+
+    <nav>
+         <a href="dashboard.html">Dashboard</a>
+        <a href="add_category.html">Add Category</a>
+        <a href="view_category.html">View Category</a>
+        <a href="add_drug.html">Add Drug</a>
+        <a href="view_drug.html">View Drugs</a>
+        <a href="view_orders.html" class="active">View Orders</a>
+        <a href="index.html" onclick="logout()">Logout</a>
+
+    </nav>
+
+</header>
+
+<div class="container">
+
+    <div class="top-section">
+
+        <h1>📦 Orders Management</h1>
+
+        <div class="order-count" id="orderCount">
+            Total Orders : 0
+        </div>
+
+    </div>
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Customer</th>
+                    <th>Drug</th>
+                    <th>Category</th>
+                    <th>Qty</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+
+            <tbody id="orders"></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script>
+
+// CHECK ADMIN
+let role = localStorage.getItem("role");
+
+if(role !== "Admin"){
+    alert("Access Denied");
+    window.location.href = "login.html";
+}
+
+// ================= LOAD ORDERS =================
+
+async function loadOrders(){
+
+    let tbody = document.getElementById("orders");
+
+    let response = await fetch("http://127.0.0.1:5001/orders");
+    let orders = await response.json();
+
+    document.getElementById("orderCount")
+    .innerText = `Total Orders : ${orders.length}`;
+
+    tbody.innerHTML = "";
+
+    orders.forEach((o, i) => {
+
+        let qty = Number(o.qty);
+        let price = Number(o.price);
+        let total = Number(o.total);
+
+        let statusClass = "";
+        if(o.status === "Order Placed") statusClass = "placed";
+        else if(o.status === "Shipped") statusClass = "shipped";
+        else statusClass = "delivered";
+
+        tbody.innerHTML += `
+        <tr>
+            <td>${i + 1}</td>
+
+            <td>
+                <div class="user-box">
+                    <div class="user-name">${o.username}</div>
+                    <div class="user-email">${o.email}</div>
+                    <div class="user-phone">${o.phone}</div>
+                    <div class="user-address">${o.address}</div>
+                </div>
+            </td>
+
+            <td>${o.drug_name}</td>
+            <td>${o.category}</td>
+            <td>${qty}</td>
+            <td class="price">₹${price.toFixed(2)}</td>
+            <td class="price">₹${total.toFixed(2)}</td>
+            <td>${o.order_date}</td>
+
+            <td>
+                <span class="status ${statusClass}">
+                    ${o.status}
+                </span>
+            </td>
+
+            <td>
+                <div class="action-box">
+
+                    <select id="status${o.id}">
+                        <option value="Order Placed" ${o.status==="Order Placed"?"selected":""}>Order Placed</option>
+                        <option value="Shipped" ${o.status==="Shipped"?"selected":""}>Shipped</option>
+                        <option value="Delivered" ${o.status==="Delivered"?"selected":""}>Delivered</option>
+                    </select>
+
+                    <button class="save-btn" onclick="updateStatus(${o.id})">
+                        Save
+                    </button>
+
+                    ${o.status === "Delivered" ? `
+                        <button class="delete-btn" onclick="deleteOrder(${o.id})">
+                            Delete
+                        </button>
+                    ` : ""}
+
+                </div>
+            </td>
+
+        </tr>
+        `;
+    });
+}
+
+// ================= UPDATE STATUS =================
+
+async function updateStatus(id){
+
+    let newStatus =
+    document.getElementById(`status${id}`).value;
+
+    await fetch("http://127.0.0.1:5001/update_order_status", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            id: id,
+            status: newStatus
+        })
+    });
+
+    alert("Order Status Updated");
+    loadOrders();
+}
+
+// ================= DELETE ORDER =================
+
+async function deleteOrder(id){
+
+    let confirmDelete = confirm("Are you sure you want to delete this order?");
+
+    if(!confirmDelete) return;
+
+    await fetch("http://127.0.0.1:5001/delete_order", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ id: id })
+    });
+
+    alert("Order Deleted");
+    loadOrders();
+}
+
+// LOGOUT
+function logout(){
+    localStorage.removeItem("role");
+}
+
+window.onload = function(){
+    loadOrders();
+};
+
+</script>
+
+</body>
+
+</html>

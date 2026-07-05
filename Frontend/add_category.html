@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Add Category</title>
+
+    <link rel="stylesheet" href="category.css">
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        Pharma Choice
+    </div>
+
+    <nav>
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="add_category.html"
+        class="active">
+
+            Add Category
+
+        </a>
+
+        <a href="view_category.html">
+            View Category
+        </a>
+
+        <a href="add_drug.html">
+            Add Drug
+        </a>
+
+        <a href="view_drug.html">
+            View Drugs
+        </a>
+
+        <a href="view_orders.html">
+            View Orders
+        </a>
+
+        <a href="index.html">
+            Logout
+        </a>
+
+    </nav>
+
+</header>
+
+<div class="container">
+
+    <div class="box">
+
+        <h2>
+            Add Category
+        </h2>
+
+        <input type="text"
+        id="categoryInput"
+        placeholder="Enter Category Name">
+
+        <button onclick="addCategory()">
+
+            Save Category
+
+        </button>
+
+        <p id="message"></p>
+
+    </div>
+
+</div>
+
+<script>
+
+async function addCategory() {
+
+    let category =
+    document.getElementById("categoryInput").value;
+
+    if (category === "") {
+
+        alert("Please enter category");
+
+        return;
+    }
+
+    try{
+
+        let response = await fetch(
+            "http://127.0.0.1:5001/add_category",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+                    category: category
+                })
+            }
+        );
+
+        let data = await response.json();
+
+        document.getElementById("message").innerText =
+        data.message;
+
+        document.getElementById("categoryInput").value = "";
+
+    }
+
+    catch(error){
+
+        console.log(error);
+
+        alert("Failed To Add Category");
+    }
+}
+
+</script>
+
+</body>
+
+</html>

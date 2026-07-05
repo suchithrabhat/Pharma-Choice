@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Cart</title>
+
+    <link rel="stylesheet" href="category.css">
+    <link rel="stylesheet" href="view_cart.css">
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        Pharma Choice
+    </div>
+
+    <nav id="navbar"></nav>
+
+</header>
+
+<div class="main">
+
+    <h1 class="title">
+        My Cart
+    </h1>
+
+    <div id="cartContainer"></div>
+
+    <h2 id="grandTotal"></h2>
+
+    <button id="confirmBtn"
+    onclick="confirmOrder()">
+
+        Confirm Order
+
+    </button>
+
+</div>
+
+<script>
+
+// ================= NAVBAR =================
+
+function loadNavbar(){
+
+    let cart =
+    JSON.parse(localStorage.getItem("cart")) || [];
+
+    let nav =
+    document.getElementById("navbar");
+
+    nav.innerHTML = `
+
+        <a href="view_drug.html">
+            View Drugs
+        </a>
+
+        <a href="my_orders.html">
+            My Orders
+        </a>
+
+        ${
+            cart.length > 0
+            ?
+            `
+            <a href="view_cart.html"
+               class="cart-icon">
+
+                🛒
+
+                <span class="cart-count">
+
+                    ${cart.length}
+
+                </span>
+
+            </a>
+            `
+            : ""
+        }
+
+        <a href="index.html"
+           onclick="logout()">
+
+           Logout
+
+        </a>
+    `;
+}
+
+// ================= LOAD CART =================
+
+function loadCart(){
+
+    let cart =
+    JSON.parse(localStorage.getItem("cart")) || [];
+
+    let container =
+    document.getElementById("cartContainer");
+
+    let total = 0;
+
+    if(cart.length === 0){
+
+        container.innerHTML =
+        "<p class='empty'>🛒 Your cart is empty</p>";
+
+        document.getElementById("grandTotal")
+        .innerText = "";
+
+        document.getElementById("confirmBtn")
+        .style.display = "none";
+
+        return;
+    }
+
+    document.getElementById("confirmBtn")
+    .style.display = "block";
+
+    let table = `
+    <table>
+        <tr>
+            <th>Drug</th>
+            <th>Category</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th>Action</th>
+        </tr>
+    `;
+
+    cart.forEach((item, index) => {
+
+        let itemTotal =
+        item.price * item.qty;
+
+        total += itemTotal;
+
+        table += `
+        <tr>
+            <td>${item.name}</td>
+            <td>${item.category}</td>
+            <td>
+                <button onclick="changeQty(${index}, -1)">-</button>
+                ${item.qty}
+                <button onclick="changeQty(${index}, 1)">+</button>
+            </td>
+            <td>₹${item.price}</td>
+            <td>₹${itemTotal.toFixed(2)}</td>
+            <td>
+                <button onclick="removeItem(${index})">
+                    Remove
+                </button>
+            </td>
+        </tr>
+        `;
+    });
+
+    table += "</table>";
+
+    container.innerHTML = table;
+
+    document.getElementById("grandTotal")
+    .innerText =
+    "Grand Total: ₹" + total.toFixed(2);
+}
+
+// ================= CHANGE QUANTITY =================
+
+function changeQty(index, change){
+
+    let cart =
+    JSON.parse(localStorage.getItem("cart")) || [];
+
+    cart[index].qty += change;
+
+    if(cart[index].qty <= 0){
+        cart.splice(index, 1);
+    }
+
+    localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+    );
+
+    loadCart();
+    loadNavbar();
+}
+
+// ================= REMOVE ITEM =================
+
+function removeItem(index){
+
+    let cart =
+    JSON.parse(localStorage.getItem("cart")) || [];
+
+    cart.splice(index, 1);
+
+    localStorage.setItem(
+        "cart",
+        JSON.stringify(cart)
+    );
+
+    loadCart();
+    loadNavbar();
+}
+
+// ================= CONFIRM ORDER (ONLY FIXED PART) =================
+
+async function confirmOrder(){
+
+    let cart =
+    JSON.parse(localStorage.getItem("cart")) || [];
+
+    let currentUser =
+    JSON.parse(localStorage.getItem("currentUser"));
+
+    if(cart.length === 0){
+        alert("Cart is empty!");
+        return;
+    }
+
+    let date =
+    new Date().toISOString().slice(0, 19).replace("T", " ");
+
+    try {
+
+        for(let item of cart){
+
+            let orderData = {
+                username: currentUser.name,
+                email: currentUser.email,
+                phone: currentUser.phone,
+                address: currentUser.address,
+                drug_name: item.name,
+                category: item.category,
+                qty: item.qty,
+                price: item.price,
+                total: item.price * item.qty,
+                status: "Order Placed",
+                order_date: date
+            };
+
+            await fetch("http://127.0.0.1:5001/place_order", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(orderData)
+            });
+
+        }
+
+        alert("Order placed successfully!");
+
+        localStorage.removeItem("cart");
+
+        loadCart();
+        loadNavbar();
+
+    } catch(error){
+        console.log(error);
+        alert("Order failed. Check backend connection.");
+    }
+}
+
+// ================= LOGOUT =================
+
+function logout(){
+
+    localStorage.removeItem("role");
+    localStorage.removeItem("currentUser");
+}
+
+// ================= PAGE LOAD =================
+
+window.onload = function(){
+
+    loadNavbar();
+    loadCart();
+};
+
+</script>
+
+</body>
+
+</html>
